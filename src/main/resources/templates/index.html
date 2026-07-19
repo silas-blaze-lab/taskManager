@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Task Manager</title>
+    <style>
+        body { font-family: sans-serif; background: #1a1a1a; color: #e0e0e0; padding: 40px; }
+        .grid { display: grid; grid-template-columns: 1fr 2fr; gap: 40px; }
+        form { background: #2d2d2d; padding: 20px; border-radius: 8px; border: 1px solid #444; }
+        input, textarea { width: 100%; margin-bottom: 10px; background: #3d3d3d; border: 1px solid #555; color: white; padding: 8px; }
+        button { background: #007bff; color: white; border: none; padding: 10px 20px; cursor: pointer; }
+        table { width: 100%; border-collapse: collapse; background: #2d2d2d; }
+        th, td { border: 1px solid #444; padding: 12px; text-align: left; }
+        th { background: #3d3d3d; }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Task Manager</h1>
+    </header>
+
+    <main>
+        <div class="grid">
+            <section>
+                <h3>Add New Task</h3>
+                <form action="/tasks" method="post">
+                    <input type="text" name="title" placeholder="Title">
+                    <textarea name="description" placeholder="Description"></textarea>
+                    <button type="submit">Add Task</button>
+                </form>
+            </section>
+
+            <section>
+                <h3>Current Tasks</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Description</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="task : ${tasks}">
+                            <td th:text="${task.title}"></td>
+                            <td th:text="${task.description}"></td>
+                            <td th:text="${task.status}"></td>
+                            <td>
+                                <!-- زر الحذف -->
+                                <a th:href="@{/tasks/delete/{id}(id=${task.id})}" style="color: red; margin-right: 10px;">Delete</a>
+                                
+                                <!-- زر التعديل -->
+                                <a th:href="@{/tasks/edit/{id}(id=${task.id})}" style="color: blue; margin-right: 10px;">Edit</a>
+                                
+                                <!-- زر الإكمال -->
+                                <a th:if="${task.status == 'Pending'}" 
+                                   th:href="@{/tasks/complete/{id}(id=${task.id})}" 
+                                   style="color: green;">Done</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+        </div>
+    </main>
+</body>
+</html>
